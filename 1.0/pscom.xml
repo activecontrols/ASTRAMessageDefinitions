@@ -370,10 +370,6 @@
     </message>
 
     <!-- Trajectory upload protocol -->
-    <message id="51809" name="TRAJ_LOAD_SD_CARD">
-      <description>Load trajectory file from SD card.</description>
-      <field type="char[63]" name="filename">Name of file</field>
-    </message>
     <message id="51810" name="TRAJ_INFO">
       <description>Start a trajectory upload. NOTE: GAIN MATRIX K[0] SHOULD ALWAYS BE THE HOVER MATRIX.</description>
       <field type="uint16_t" name="k"># Gain matrices</field>
