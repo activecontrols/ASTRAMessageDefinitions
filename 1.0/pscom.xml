@@ -37,6 +37,21 @@
         <description>64-bit floating-point</description>
       </entry>
     </enum>
+    <enum name="MAV_CONTROL_MODE">
+      <description>Specifies ASTRA Control Mode.</description>
+      <entry value="1" name="MAV_CONTROL_MODE_TRACK">
+        <description>8-bit unsigned integer</description>
+      </entry>
+      <entry value="2" name="MAV_CONTROL_MODE_STABILIZE">
+        <description>8-bit signed integer</description>
+      </entry>
+      <entry value="3" name="MAV_CONTROL_MODE_LAND">
+        <description>16-bit unsigned integer</description>
+      </entry>
+      <entry value="4" name="MAV_CONTROL_MODE_FINAL_APPROACH">
+        <description>16-bit signed integer</description>
+      </entry>
+    </enum>
     <enum name="MAV_RESULT">
       <description>Result from a MAVLink command (MAV_CMD)</description>
       <entry value="0" name="MAV_RESULT_ACCEPTED">
@@ -215,37 +230,14 @@
         <param index="7">Empty</param>
       </entry>
 
-      <entry value="193" name="MAV_CMD_DO_PAUSE_CONTINUE" hasLocation="false" isDestination="false">
-        <description>Hold the current position or continue.</description>
-        <param index="1" label="Continue" minValue="0" maxValue="1" increment="1">0: Pause current mission or reposition command, hold current position. 1: Continue mission. On pause, enter hover mode.</param>
-        <param index="2">Reserved</param>
-        <param index="3">Reserved</param>
-        <param index="4">Reserved</param>
-        <param index="5">Reserved</param>
-        <param index="6">Reserved</param>
-        <param index="7">Reserved</param>
-      </entry>
-
-      <entry value="21" name="MAV_CMD_NAV_LAND" hasLocation="true" isDestination="true">
-        <description>Land at current location.</description>
-        <param index="1" label="Abort Alt" units="m">Minimum target altitude if landing is aborted (0 = undefined/use system default).</param>
-        <param index="2" label="Land Mode" enum="PRECISION_LAND_MODE">(IGNORED) Precision land mode.</param>
-        <param index="3">Empty.</param>
-        <param index="4" label="Yaw Angle" units="deg">Desired yaw angle. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).</param>
-        <param index="5" label="Latitude">(IGNORED) Latitude.</param>
-        <param index="6" label="Longitude">(IGNORED) Longitude.</param>
-        <param index="7" label="Altitude" units="m">Landing altitude (ground level in current frame).</param>
-      </entry>
-
-      <entry value="300" name="MAV_CMD_MISSION_START" hasLocation="false" isDestination="false">
-        <description>start running a mission</description>
-        <param index="1" label="First Item" minValue="0" increment="1">first_item: the first mission item to run</param>
-        <param index="2" label="Last Item" minValue="0" increment="1">last_item:  the last mission item to run (after this item is run, the vehicle lands in place)</param>
-      </entry>
-
       <entry value="51801" name="MAV_CMD_MISSION_LOAD_SD" hasLocation="false" isDestination="false">
         <description>Load a trajectory mission from the SD card (/missions/mission{number}.atf) into PSRAM.</description>
         <param index="1" label="Mission number" minValue="0">the mission number to load</param>
+      </entry>
+
+      <entry value="51802" name="MAV_CMD_CONTROL_SET_MODE" hasLocation="false" isDestination="false">
+        <description>Set the mode (gains matrix) to use.</description>
+        <param index="1" label="Control mode" enum="MAV_CONTROL_MODE">Control mode to use</param>
       </entry>
 
       <!-- Non-standard commands are prefixed with 518 to indicate custom definitions -->
@@ -367,6 +359,10 @@
       <field type="uint16_t" name="current_point">Current point of trajectory segment being followed.</field>
       <field type="uint16_t" name="total_segments">Total segments stored.</field>
       <field type="uint16_t" name="total_points">Total trajectory points being followed.</field>
+    </message>
+    <message id="51802" name="CHANGE_CONTROL_MODE">
+      <description>Notify a change in control mode</description>
+      <field type="uint8_t" name="mode" enum="MAV_CONTROL_MODE">New control mode.</field>
     </message>
 
     <!-- Trajectory upload protocol -->
