@@ -270,6 +270,23 @@
       <field type="uint16_t" name="errors_count4">Autopilot-specific errors</field>
     </message>
 
+    <message id="27" name="RAW_IMU">
+      <description>The RAW IMU readings for a 9DOF sensor, which is identified by the id (default IMU1). This message should always contain the true raw values without any scaling to allow data capture and system debugging.</description>
+      <field type="uint64_t" name="time_usec" units="us">Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.</field>
+      <field type="int16_t" name="xacc">X acceleration (raw)</field>
+      <field type="int16_t" name="yacc">Y acceleration (raw)</field>
+      <field type="int16_t" name="zacc">Z acceleration (raw)</field>
+      <field type="int16_t" name="xgyro">Angular speed around X axis (raw)</field>
+      <field type="int16_t" name="ygyro">Angular speed around Y axis (raw)</field>
+      <field type="int16_t" name="zgyro">Angular speed around Z axis (raw)</field>
+      <field type="int16_t" name="xmag">X Magnetic field (raw)</field>
+      <field type="int16_t" name="ymag">Y Magnetic field (raw)</field>
+      <field type="int16_t" name="zmag">Z Magnetic field (raw)</field>
+      <extensions/>
+      <field type="uint8_t" name="id" instance="true">Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)</field>
+      <field type="int16_t" name="temperature" units="cdegC">Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).</field>
+    </message>
+
     <message id="146" name="CONTROL_SYSTEM_STATE">
       <description>The smoothed, monotonic system state used to feed the control loops of the system.</description>
       <field type="uint64_t" name="time_usec" units="us">Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.</field>
@@ -410,6 +427,10 @@
       <description>Send a response regarding whether the trajectory load was successful.</description>
       <field type="uint32_t" name="points_loaded">Number of points successfully loaded (-1 if error).</field>
       <field type="uint8_t" name="result" enum="MAV_RESULT">Result of load.</field>
+    </message>
+    <message id="51880" name="COMMAND_SIMPLE">
+      <description>Send a simple string command, for rapid prototyping.</description>
+      <field type="char[127]" name="command">Command to send</field>
     </message>
   </messages>
 </mavlink>
