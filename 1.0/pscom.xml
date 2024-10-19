@@ -202,50 +202,14 @@
       <!-- Standard commands are compatible with the common.xml MAVLink definition -->
 
       <!-- Mission protocol. Note that this differs from the standard mission protocol in that we have implemented our own trajectory upload method -->
-      <entry value="224" name="MAV_CMD_DO_SET_MISSION_CURRENT" hasLocation="false" isDestination="false">
-        <description>
-          Start the trajectory segment specified by Number. Note that this should also be used for RTL, since ASTRA does not support RTL.
-        </description>
-        <param index="1" label="Number" minValue="-1" increment="1">Mission sequence value to set. -1 for the current mission item (use to reset mission without changing current mission item).</param>
-        <param index="2" label="Reset Mission" minValue="0" maxValue="1" increment="1">(CURRENTLY IGNORED) Resets mission. 1: true, 0: false. Resets jump counters to initial values and changes mission state "completed" to be "active" or "paused".</param>
-        <param index="3">Empty</param>
-        <param index="4">Empty</param>
-        <param index="5">Empty</param>
-        <param index="6">Empty</param>
-        <param index="7">Empty</param>
-      </entry>
-
-      <entry value="193" name="MAV_CMD_DO_PAUSE_CONTINUE" hasLocation="false" isDestination="false">
-        <description>Hold the current position or continue.</description>
-        <param index="1" label="Continue" minValue="0" maxValue="1" increment="1">0: Pause current mission or reposition command, hold current position. 1: Continue mission. On pause, enter hover mode.</param>
-        <param index="2">Reserved</param>
-        <param index="3">Reserved</param>
-        <param index="4">Reserved</param>
-        <param index="5">Reserved</param>
-        <param index="6">Reserved</param>
-        <param index="7">Reserved</param>
-      </entry>
-
-      <entry value="21" name="MAV_CMD_NAV_LAND" hasLocation="true" isDestination="true">
-        <description>Land at current location.</description>
-        <param index="1" label="Abort Alt" units="m">Minimum target altitude if landing is aborted (0 = undefined/use system default).</param>
-        <param index="2" label="Land Mode" enum="PRECISION_LAND_MODE">(IGNORED) Precision land mode.</param>
-        <param index="3">Empty.</param>
-        <param index="4" label="Yaw Angle" units="deg">Desired yaw angle. NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).</param>
-        <param index="5" label="Latitude">(IGNORED) Latitude.</param>
-        <param index="6" label="Longitude">(IGNORED) Longitude.</param>
-        <param index="7" label="Altitude" units="m">Landing altitude (ground level in current frame).</param>
-      </entry>
-
-      <entry value="300" name="MAV_CMD_MISSION_START" hasLocation="false" isDestination="false">
-        <description>start running a mission</description>
-        <param index="1" label="First Item" minValue="0" increment="1">first_item: the first mission item to run</param>
-        <param index="2" label="Last Item" minValue="0" increment="1">last_item:  the last mission item to run (after this item is run, the vehicle lands in place)</param>
-      </entry>
-
       <entry value="51801" name="MAV_CMD_MISSION_LOAD_SD" hasLocation="false" isDestination="false">
         <description>Load a trajectory mission from the SD card (/missions/mission{number}.atf) into PSRAM.</description>
         <param index="1" label="Mission number" minValue="0">the mission number to load</param>
+      </entry>
+
+      <entry value="51901" name="MAV_CMD_CONTROL_SET_MODE" hasLocation="false" isDestination="false">
+        <description>Set the control mode.</description>
+        <param index="1" label="Mode" minValue="0">The mode to set to.</param>
       </entry>
 
       <!-- Non-standard commands are prefixed with 518 to indicate custom definitions -->
@@ -270,20 +234,19 @@
       <field type="uint16_t" name="errors_count4">Autopilot-specific errors</field>
     </message>
 
-    <message id="27" name="RAW_IMU">
-      <description>The RAW IMU readings for a 9DOF sensor, which is identified by the id (default IMU1). This message should always contain the true raw values without any scaling to allow data capture and system debugging.</description>
+    <message id="26" name="SCALED_IMU">
+      <description>The RAW IMU readings for the usual 9DOF sensor setup. This message should contain the scaled values to the described units</description>
       <field type="uint64_t" name="time_usec" units="us">Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.</field>
-      <field type="int16_t" name="xacc">X acceleration (raw)</field>
-      <field type="int16_t" name="yacc">Y acceleration (raw)</field>
-      <field type="int16_t" name="zacc">Z acceleration (raw)</field>
-      <field type="int16_t" name="xgyro">Angular speed around X axis (raw)</field>
-      <field type="int16_t" name="ygyro">Angular speed around Y axis (raw)</field>
-      <field type="int16_t" name="zgyro">Angular speed around Z axis (raw)</field>
-      <field type="int16_t" name="xmag">X Magnetic field (raw)</field>
-      <field type="int16_t" name="ymag">Y Magnetic field (raw)</field>
-      <field type="int16_t" name="zmag">Z Magnetic field (raw)</field>
+      <field type="int16_t" name="xacc">X acceleration (mm/s)</field>
+      <field type="int16_t" name="yacc">Y acceleration (mm/s)</field>
+      <field type="int16_t" name="zacc">Z acceleration (mm/s)</field>
+      <field type="int16_t" name="xgyro">Angular speed around X axis (mDPS)</field>
+      <field type="int16_t" name="ygyro">Angular speed around Y axis (mDPS)</field>
+      <field type="int16_t" name="zgyro">Angular speed around Z axis (mDPS)</field>
+      <field type="int16_t" name="xmag">X Magnetic field (mgauss)</field>
+      <field type="int16_t" name="ymag">Y Magnetic field (mgauss)</field>
+      <field type="int16_t" name="zmag">Z Magnetic field (mgauss)</field>
       <extensions/>
-      <field type="uint8_t" name="id" instance="true">Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)</field>
       <field type="int16_t" name="temperature" units="cdegC">Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).</field>
     </message>
 
